@@ -116,14 +116,13 @@ export const loginUser = asyncHandler(async (req, res) => {
                 "User not found");
         }
 
-        res.cookie("token", token, 
-            { 
-                expires: new Date(Date.now() + 1000 * 60 * 60 * 24), httpOnly: true, sameSite: "strict", secure: true 
-            }
-        );
     
         return res
         .status(200)
+        .cookie("token", token, {expires: new Date(Date.now() + 1000 * 60 * 60 * 24), httpOnly: true, sameSite: "strict", secure: true 
+
+        })
+
         .json(
             new ApiResponse(
                 200,

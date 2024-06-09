@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 import authRoutes from './routes/auth.routes.js'
+import messageRoutes from './routes/message.routes.js'
+import userRoutes from './routes/user.routes.js'
 import connectDB from './db/connectDB.js'
 
 dotenv.config()
@@ -11,8 +13,11 @@ const port = process.env.PORT || 4000
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cookieParser())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/message', messageRoutes)
+app.use('/api/users' , userRoutes)
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
