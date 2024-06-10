@@ -89,20 +89,28 @@ export const getMessages = asyncHandler(async (req, res) => {
 
 
         if(!conversation){
-            conversation = new Conversation({
-                participants: [senderId, receiverId],
-                messages: []
-            });
 
-            await conversation.save();
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    [],
+                    "No messages found",
+                    true
+                )
+            )
         }
+
+        const messages = conversation.messages;
+
 
         return res  
         .status(200)
         .json(  
             new ApiResponse(
                 200,    
-                conversation.messages,
+                messages,
                 "Messages fetched successfully",
                 true
             )

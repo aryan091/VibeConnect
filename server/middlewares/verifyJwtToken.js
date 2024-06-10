@@ -1,19 +1,15 @@
 import jwt from "jsonwebtoken";
-import cookieParser from 'cookie-parser'
-
-
 export const verifyToken = (req, res, next) => {
     try {
-        const cookieToken = req.cookies["token"];
+        const headerToken = req.headers["authorization"];
 
-        if (!cookieToken) {
+        if (!headerToken) {
             return res.status(402).json({ message: "Unauthorized access" });
 
         }
 
 
-        const decode = jwt.verify(cookieToken, process.env.JWT_SECRET_KEY);
-        console.log(decode);
+        const decode = jwt.verify(headerToken, process.env.JWT_SECRET_KEY);
         req.userId = decode.id;
         next();
     } catch (error) {
@@ -22,18 +18,18 @@ export const verifyToken = (req, res, next) => {
     }
 };
 
-export const decodeJwtToken = (cookie) => {
+export const decodeJwtToken = (authHeader) => {
     try {
         
-        if (!cookie) {
-            console.log("Cookie is missing.");
+        if (!authHeader) {
+            console.log("Authorization header is missing.");
             return;
         }else
         {
-            console.log("Cookie is present.",authHeader);
+            console.log("Authorization header is present.",authHeader);
         }
 
-        const decode = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
+        const decode = jwt.verify(authHeader, process.env.JWT_SECRET_KEY);
         console.log("Decoded token:", decode);
 
         const userId = decode.userId;

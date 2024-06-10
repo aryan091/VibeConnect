@@ -34,7 +34,7 @@ import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
 
         const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
-        const profilePic = gender === "Male" ? boyProfilePic : girlProfilePic
+        const profilePic = gender === "male" ? boyProfilePic : girlProfilePic
 
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
@@ -54,9 +54,9 @@ import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
         return res.status(200).json(
             new ApiResponse(
                 200, 
+                user,
                 "User created successfully", 
-                user
-             , true
+                true
             ));
     } catch (error) {
         throw new ApiError(
@@ -69,75 +69,42 @@ import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
 });    
 
 export const loginUser = asyncHandler(async (req, res) => {
-    
     try {
         const { username, password } = req.body;
-    
-        if(!username || !password){
-            throw new ApiError(
-                400,
-                "All fields are required", 
-                false, 
-                "Please fill all fields");
-        }                                                               
-    
+
+        if (!username || !password) {
+            throw new ApiError(400, "All fields are required", false, "Please fill all fields");
+        }
 
         const user = await User.findOne({ username });
 
-        if(!user){
-            throw new ApiError(
-                400, 
-                "User not found", 
-                false , 
-                "User not found");
-        }   
+        if (!user) {
+            throw new ApiError(400, "User not found", false, "User not found");
+        }
 
         const isMatch = await bcryptjs.compare(password, user?.password || "");
-        if(!isMatch){
-            throw new ApiError( 
-                400, 
-                "Incorrect password", 
-                false , 
-                "Incorrect password");
+        if (!isMatch) {
+            throw new ApiError(400, "Incorrect password", false, "Incorrect password");
         }
-
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-            expiresIn: "1d", 
-        })
+            expiresIn: "1d",
+        });
 
-        const loggedInUser = await User.findById(user._id).select("-password")
+        const loggedInUser = await User.findById(user._id).select("-password");
 
-        if(!loggedInUser){
-            throw new ApiError(
-                400, 
-                "User not found", 
-                false , 
-                "User not found");
+        if (!loggedInUser) {
+            throw new ApiError(400, "User not found", false, "User not found");
         }
 
-    
-        return res
-        .status(200)
-        .cookie("token", token, {expires: new Date(Date.now() + 1000 * 60 * 60 * 24), httpOnly: true, sameSite: "strict", secure: true 
 
-        })
 
-        .json(
-            new ApiResponse(
-                200,
-                "User logged in successfully",
-                {
-                    user : loggedInUser,
-                    token:token
-                },
-                true
-            )
-        )
+
+        return res.status(200).json(new ApiResponse(200, { user: loggedInUser, token: token }, "User logged in successfully", true));
     } catch (error) {
-        throw new ApiError(500, "Internal server error", false , error.message);
-    }       
-}); 
+        throw new ApiError(500, "Internal server error", false, error.message);
+    }
+});
 
 export const getUserProfile = asyncHandler(async (req, res) => {
     try {   
@@ -185,7 +152,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 export const logoutUser = asyncHandler(async (req, res) => {
     try {
         return res
-        .clearCookie("token" , { expires: new Date(Date.now() + 1000 * 60 * 60 * 24), httpOnly: true, sameSite: "strict", secure: true })
+        .cookie("jwt", "", { maxAge: 0 })
         .status(200)
         .json(
             new ApiResponse(

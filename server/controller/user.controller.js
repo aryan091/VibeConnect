@@ -9,6 +9,7 @@ import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
 export const getUserForSidebar = asyncHandler(async (req, res) => {
     try {
         const userId = req.userId
+        console.log("userId in get user chats: ",userId);
         
         if(!userId){ 
             throw new ApiError(

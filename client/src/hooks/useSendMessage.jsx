@@ -1,0 +1,36 @@
+import React,{useState} from 'react'
+import toast from "react-hot-toast";
+import useConversation from "../zustand/useConversation";
+import axios from "axios";
+
+const useSendMessage = () => {
+
+    const[loading,setLoading] = useState(false)
+    const {messages , setMessages , selectedConversation} = useConversation()
+
+    const backendLink = "http://localhost:4000"
+
+
+    const sendMessage = async (message) => {
+
+        setLoading(true)
+        try {
+            const token = localStorage.getItem("token");
+            axios.defaults.headers.common["Authorization"] = token;
+
+            const {data} = await axios.post(`${backendLink}/api/message/send/${selectedConversation._id}`, {
+                message            })
+            setMessages([...messages , data])
+            setLoading(false)
+        } catch (error) {
+            toast.error(error.message)
+        }
+        finally{
+            setLoading(false)
+        }
+    }
+
+  return {sendMessage , loading}
+}
+
+export default useSendMessage
