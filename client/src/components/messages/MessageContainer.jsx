@@ -37,7 +37,7 @@ export default MessageContainer;
 
 const NoChatSelected = () => {
 
-	const{authUser,setAuthUser} = useAuthContext()
+	const{authUser} = useAuthContext()
 
 
 

@@ -7,6 +7,7 @@ import Conversation from "../models/conversation.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
+import { getReceiverSocketId } from "../utils/socket.js";
 
 
 export const sendMessage = asyncHandler(async (req, res) => {
@@ -48,7 +49,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
     
 
         if(newMessage){{
-            conversation.messages.push(newMessage); 
+            conversation.messages.push(newMessage._id); 
 
         }
 
@@ -56,6 +57,11 @@ export const sendMessage = asyncHandler(async (req, res) => {
         // await newMessage.save();
 
         await Promise.all([conversation.save(), newMessage.save()]);
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
 
     }
         return res
