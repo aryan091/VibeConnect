@@ -7,7 +7,7 @@ import Conversation from "../models/conversation.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
-import { getReceiverSocketId } from "../utils/socket.js";
+import { getReceiverSocketId } from "../socket/socket.js";
 
 
 export const sendMessage = asyncHandler(async (req, res) => {
