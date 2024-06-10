@@ -20,7 +20,6 @@ const useGetMessages = () => {
                 axios.defaults.headers.common["Authorization"] = token;
 
 				const res = await axios.get(`${backendLink}/api/message/${selectedConversation._id}`);
-                console.log("Messages : ",res.data)
                 setMessages(res.data.data);
 			} catch (error) {
 				toast.error(error.message);

@@ -7,7 +7,8 @@ import Conversation from "../models/conversation.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import {verifyToken , decodeJwtToken} from "../middlewares/verifyJwtToken.js";
-import { getReceiverSocketId } from "../socket/socket.js";
+import { getReceiverSocketId , io } from "../socket/socket.js";
+
 
 
 export const sendMessage = asyncHandler(async (req, res) => {
@@ -15,10 +16,12 @@ export const sendMessage = asyncHandler(async (req, res) => {
     try 
     {
 
-        const {id:receiverId} = req.params
+        const {id} = req.params
         const {message} = req.body;
         const senderId = req.userId;
 
+
+        const receiverId = id
 
     
         if(!receiverId || !senderId || !message){

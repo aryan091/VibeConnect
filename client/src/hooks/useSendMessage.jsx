@@ -18,9 +18,10 @@ const useSendMessage = () => {
             const token = localStorage.getItem("token");
             axios.defaults.headers.common["Authorization"] = token;
 
-            const {data} = await axios.post(`${backendLink}/api/message/send/${selectedConversation._id}`, {
+            const res = await axios.post(`${backendLink}/api/message/send/${selectedConversation._id}`, {
                 message            })
-            setMessages([...messages , data])
+
+            setMessages([...messages , res.data.data])
             setLoading(false)
         } catch (error) {
             toast.error(error.message)
