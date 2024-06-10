@@ -15,7 +15,7 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (authUser) {
-            const socket = io("http://localhost:4000", {
+            const socket = io("https://vibeconnect-0t3x.onrender.com", {
                 query: {
                     userId: authUser.user._id,
                 },
@@ -36,7 +36,7 @@ export const SocketContextProvider = ({ children }) => {
             if (socket) {
                 socket.close();
                 setSocket(null);
-                
+
             }
         }
     }, [authUser ]);
