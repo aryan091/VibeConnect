@@ -8,7 +8,7 @@ const useSendMessage = () => {
     const[loading,setLoading] = useState(false)
     const {messages , setMessages , selectedConversation} = useConversation()
 
-    const backendLink = "http://localhost:4000"
+    const backendLink = "https://vibeconnect-0t3x.onrender.com"
 
 
     const sendMessage = async (message) => {

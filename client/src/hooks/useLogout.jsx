@@ -4,7 +4,7 @@ import { useAuthContext } from '../context/AuthContext';
 
 const useLogout = () => {
 
-    const backendLink = "http://localhost:4000"
+    const backendLink = "https://vibeconnect-0t3x.onrender.com"
 
     const [loading,setLoading] = useState(false)
     const{authUser,setAuthUser} = useAuthContext()
